@@ -1,0 +1,3 @@
+[submodule "submodules/vision"]
+	path = submodules/vision
+	url = git@github.com:6cyc6/vision.git
