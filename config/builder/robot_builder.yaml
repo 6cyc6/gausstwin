@@ -1,0 +1,35 @@
+# ======================================= General Config ======================================= #
+vis: True
+ps_vis: True
+
+# ======================================= GS Optimization Config ======================================= #
+# general
+device:  "cuda:0"
+near_plane: 0.01
+far_plane: 10.0
+
+# initialization
+init_opacity: 0.1
+num_pts: 3000
+disk: False   # if use disk Gaussians (False: ellipsoid Gaussians)
+
+# optimization
+max_iter: 2000
+batch_size: 8
+ssim_lambda: 0.2
+
+# learning rates
+learning_rates: {
+  "means": 1.6e-5,
+  "quats": 1.0e-3,
+  "colors": 2.5e-3,
+  "scales": 5.0e-3,
+  "opacities": 5.0e-2,
+}
+
+# strategy Config
+refine_start_iter: 200
+refine_stop_iter: 1800
+refine_every: 100
+prune_opa: 0.1
+grow_scale3d: 0.015

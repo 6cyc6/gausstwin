@@ -1,0 +1,81 @@
+[workspace]
+authors = ["Yichen Cai"]
+channels = ["conda-forge"]
+name = "gausstwin"
+platforms = ["linux-64"]
+version = "0.1.0"
+
+[activation]
+scripts = ["env.sh"]
+
+[system-requirements]
+cuda = "12.4"
+
+# ── Conda dependencies ──────────────────────────────────────────────────────
+
+[dependencies]
+python = ">=3.10, <3.11"
+pip = ">=25"
+
+# GCC/G++ 13 — MUST be <14 for fused-ssim and gsplat compilation
+gcc_linux-64 = ">=13,<14"
+gxx_linux-64 = ">=13,<14"
+# Pin sysroot to glibc 2.17 headers — newer sysroots define __float128/_Float128
+# which nvcc cannot process ("invalid combination of type specifiers")
+sysroot_linux-64 = "2.17.*"
+
+# other packages
+pinocchio = ">=3.8.0,<4"
+polyscope = ">=2.3.0,<3"
+open3d = "*"
+ffmpeg = "*"
+glfw = "*"
+black = ">=25.1.0,<26"
+numpy = "<2"
+scipy = "*"
+trimesh = "*"
+pydantic = ">=2.12.5,<3"
+scikit-learn = "*"
+pandas = "*"
+tqdm = "*"
+cuda-version = "==12.4"
+scikit-image = ">=0.20.0,<0.21"
+
+[pypi-dependencies]
+torch = { version = "==2.6.0", index = "https://download.pytorch.org/whl/cu124" }
+torchvision = { version = "==0.21.0", index = "https://download.pytorch.org/whl/cu124" }
+warp-lang = { version = "==1.9.0", extras = ["extras"] }
+
+# ── Tasks ───────────────────────────────────────────────────────────────────
+
+[tasks]
+# build repo
+build_repo = { cmd = """
+    pip install 'isaaclab[isaacsim,all]==2.1.0' --extra-index-url https://pypi.nvidia.com &&
+    pip install torch-cluster -f https://data.pyg.org/whl/torch-2.6.0+cu124.html &&
+    LDFLAGS="-L$CONDA_PREFIX/lib -lstdc++" pip install lycon --no-build-isolation &&
+    pip install git+https://github.com/nerfstudio-project/gsplat.git --no-build-isolation &&
+    pip install git+https://github.com/rahul-goel/fused-ssim/ -v --no-build-isolation &&
+    pip install -e submodules/vision/segmentation/sam2 &&
+    pip install -e submodules/vision/segmentation/efficient_track_anything &&
+    pip install -e .
+""" }
+
+# download checkpoints
+download_ckpts = { cmd = "bash download_ckpts.sh", cwd = "checkpoints" } 
+
+# quick demo
+process_video_rope = { cmd = "python process_video.py --obj rope", cwd = "scripts/tracking" }
+track_rope = { cmd = "python track_rope.py", cwd = "scripts/tracking/rope"}
+
+process_video_rigid = { cmd = "python process_video.py --obj rigid", cwd = "scripts/tracking" }
+track_rigid = { cmd = "python track_rigid.py", cwd = "scripts/tracking/rigid"}
+
+# build object
+preprocess_rope = { cmd = "python save_cam_cfg.py --obj rope", cwd = "scripts/process_data"}
+build_rope = { cmd = "python build_rope.py", cwd = "scripts/object_build/rope" }
+
+preprocess_rigid = { cmd = "python save_cam_cfg.py --obj rigid", cwd = "scripts/process_data"}
+build_rigid = { cmd = "python build_rigid_body.py", cwd = "scripts/object_build/rigid" }
+
+save_rigid_video = { cmd = "python save_vis_rigid.py", cwd = "scripts/tracking/rigid" }

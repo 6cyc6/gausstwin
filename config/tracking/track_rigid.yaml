@@ -1,0 +1,83 @@
+# ======================================= General Config ======================================= #
+vis: False # check the optimization process
+robot_name: "fr3_v3"
+
+# Save for visualization and evaluation
+render: True # visualize the optimization results
+stage_path: "result.usda"
+
+# ============================ Data Directory ======================================= #
+data_dir: "<absolute_path_to_save_data_dir>" # where you save the dataset
+
+# =============================== EfficientTAM Config ===================================== #
+sam2_checkpoint: "<absoulte_path_to_sam2_checkpoint>/sam2.1_hiera_small.pt" # absolute path to the SAM2 checkpoint
+sam2_config: "configs/sam2.1/sam2.1_hiera_s.yaml" # do not need to change (relative path)
+tam_checkpoint: "<absoulte_path_to_efficienttam_checkpoint>/efficienttam_s_512x512.pt" # absolute path to the EfficientTAM checkpoint
+tam_config: "configs/efficienttam/efficienttam_s_512x512.yaml" # do not need to change (relative path)
+
+n_cams: 3
+num_views: 3
+
+# ======================================= Experiments ======================================= # 
+# ======================== Single Object ============================ #
+# ------------- Tee big ------------ #
+exp_name: "teebig_0001"
+obj_list: ["T_shape"]
+
+# solver
+substeps: 20
+solver_iterations: 1
+fps: 60
+
+# video crop
+disp: 460
+max_idx: 2020
+length: 1560
+
+# optic track ground truth id
+gt_id: "teebig"
+
+# img idx for segmentation
+fix_idx_1: 0
+fix_idx_2: 0
+fix_idx_3: 0
+fix_idx_4: 0
+
+# shape / ground friction
+ground_mu: 0.5
+ground_restitution: 0.0
+
+# object
+rigid_mu: 0.3
+rigid_density_factor: 0.6
+rigid_restitution: 0.0
+
+# gripper
+obj_radii: 0.005
+gripper_mu: 0.3
+gripper_density_factor: 1.0
+
+# general settings
+torsional_friction: 0.01
+rolling_friction: 0.0
+
+# with mask
+kp_f: 0.8
+kp_m: 1.2
+
+# ======================================= GS Optimization Config ======================================= #
+# 0: GS means + quats
+# 1: GS means + quats + object position
+# 2: obj pos + rot 
+# 3: obj pos + rot + GS means + quats (not working for GS-twin track currently)
+# 4: obj pos + rot + GS means 
+mode: 4
+batch: True 
+use_seg_mask: True
+
+# visual force
+vf_iterations: 6  
+vf_lr_means: 0.0003
+vf_lr_quats: 0.0
+vf_lr_disps: 0.0008
+vf_lr_rots: 0.003

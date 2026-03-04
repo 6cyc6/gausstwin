@@ -1,0 +1,94 @@
+# ======================================= General Config ======================================= #
+vis_init_particles: True
+vis_init_gaussians: True
+
+# ======================================= Saved Data Config ======================================= #
+data_dir: "<absolute_path_to_save_data_dir>" # where you save the dataset
+
+# =============================== EfficientTAM and SAM2 Config ===================================== #
+sam2_checkpoint: "<absoulte_path_to_sam2_checkpoint>/sam2.1_hiera_small.pt" # absolute path to the SAM2 checkpoint
+sam2_config: "configs/sam2.1/sam2.1_hiera_s.yaml" # do not need to change (relative path)
+tam_checkpoint: "<absoulte_path_to_efficienttam_checkpoint>/efficienttam_s_512x512.pt" # absolute path to the EfficientTAM checkpoint
+tam_config: "configs/efficienttam/efficienttam_s_512x512.yaml" # do not need to change (relative path)
+
+# # ------------ save prompt
+# load_prompt: False 
+# save_prompt: True
+
+# ------------ load prompt (if you have already saved prompt)
+load_prompt: True 
+save_prompt: False
+
+save_ground_gaussians: True
+
+# ======================================= Experiments ======================================= # 
+# ================== Single Object ================== # 
+# ----------------- T big ------------ #
+# exp_name: "teebig_0001"
+# obj_list: ["T_shape"]
+# n_objs: 1
+# particle_radius: 0.005
+# depth_threshold: 0.005
+# num_views: 4 
+# dense_z: False
+# cover_radius: 0.003
+# n_depth_tol: 0
+# n_mask_tol: 0
+
+# fix_idx_1: 252
+# fix_idx_2: 0
+# fix_idx_3: 0
+# fix_idx_4: 0
+
+# ======================================= GS Optimization Config ======================================= #
+# general
+device:  "cuda:0"
+near_plane: 0.01
+far_plane: 3.0
+
+# initialization
+init_opacity: 0.1
+num_pts: 80000
+num_gaussians: 5000
+disk: False   # if use disk Gaussians (False: ellipsoid Gaussians)
+
+# optimization
+batch_size: 4
+ssim_lambda: 0.1
+
+# particle initialization
+particle_max_iter: 1500
+particle_collision_max_iter: 3
+particle_batch: True  # if use batch optimization 
+learning_rates_particles: {
+  # "means": 1.0e-4,
+  "means": 1.0e-5,
+  "quats": 1.0e-3,
+  "colors": 2.5e-3,
+  "scales": 1.0e-3,
+  "opacities": 1.0e-2,
+}
+
+# gaussian initialization
+# gaussian_max_iter: 1600
+gaussian_max_iter: 2200
+gaussian_batch: True  # if use batch optimization
+use_rgbd: True  # if True, use RGBD for 3DGS training (only for non-ground objects)
+depth_lambda: 0.01  # weight for depth regularization
+
+learning_rates_gaussians: {
+  "means": 1.6e-5,
+  "quats": 1.0e-3,
+  "colors": 2.5e-3,
+  "scales": 2.0e-3,
+  "opacities": 5.0e-2,
+}
+
+# Strategy Config
+refine_start_iter: 200
+refine_stop_iter: 2100
+refine_every: 100
+reset_every: 500
+
+prune_opa: 0.2
+grow_scale3d: 0.02
