@@ -61,9 +61,17 @@ build_repo = { cmd = """
     pip install -e .
 """ }
 
+# ---------------------------- Download ------------------------------------- #
 # download checkpoints
 download_ckpts = { cmd = "bash download_ckpts.sh", cwd = "checkpoints" } 
 
+# download demo
+download_demo = { cmd = "bash download_demo.sh", cwd = "dataset"}
+
+# download dataset
+download_dataset = { cmd = "bash download_dataset.sh", cwd = "dataset"}
+
+# ---------------------------- Demo ------------------------------------- #
 # quick demo
 process_video_rope = { cmd = "python process_video.py --obj rope", cwd = "scripts/tracking" }
 track_rope = { cmd = "python track_rope.py", cwd = "scripts/tracking/rope"}
@@ -71,6 +79,7 @@ track_rope = { cmd = "python track_rope.py", cwd = "scripts/tracking/rope"}
 process_video_rigid = { cmd = "python process_video.py --obj rigid", cwd = "scripts/tracking" }
 track_rigid = { cmd = "python track_rigid.py", cwd = "scripts/tracking/rigid"}
 
+# ---------------------------- Build ------------------------------------- #
 # build object
 preprocess_rope = { cmd = "python save_cam_cfg.py --obj rope", cwd = "scripts/process_data"}
 build_rope = { cmd = "python build_rope.py", cwd = "scripts/object_build/rope" }

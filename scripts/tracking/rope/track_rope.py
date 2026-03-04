@@ -146,11 +146,6 @@ def run_tracking(seed=None):
     # ========================================= Tracking Loop ============================================= #
     vis_dir = os.path.join(data_dir, "vis")
     safe_mkdir(vis_dir)
-    if cfg.eval:
-        rod_pos_save = []
-        rod_quat_save = []
-        save_dir = os.path.join(data_dir, "result")
-        safe_mkdir(save_dir)
     iter_times = []
     pbar = tqdm(range(length), desc="Tracking Progress", unit="frame")
     for i in pbar:
@@ -171,15 +166,8 @@ def run_tracking(seed=None):
             obj_pcl[:, -1] += builder.ground_h
         
         # load robot states
-        # robot_cfg = np.load(os.path.join(data_dir, f"robot/joint_pos_seq/{idx}.npy")) # (rougly 33, 7)
-        # robot_cfg_qd = np.load(os.path.join(data_dir, f"robot/joint_vel_seq/{idx}.npy")) # (rougly 33, 7)
-        
-        if idx == 0:
-            robot_cfg = np.load(os.path.join(data_dir, f"robot/joint_pos_seq/{idx}.npy")) # (rougly 33, 7)
-            robot_cfg_qd = np.load(os.path.join(data_dir, f"robot/joint_vel_seq/{idx}.npy")) # (rougly 33, 7)
-        else:
-            robot_cfg = np.load(os.path.join(data_dir, f"robot/joint_pos_seq/{idx - 1}.npy")) # (rougly 33, 7)
-            robot_cfg_qd = np.load(os.path.join(data_dir, f"robot/joint_vel_seq/{idx - 1}.npy")) # (rougly 33, 7)
+        robot_cfg = np.load(os.path.join(data_dir, f"robot/joint_pos_seq/{idx}.npy")) # (rougly 33, 7)
+        robot_cfg_qd = np.load(os.path.join(data_dir, f"robot/joint_vel_seq/{idx}.npy")) # (rougly 33, 7)
         
         torch.cuda.synchronize()
         t_load_end = time.time()
@@ -200,7 +188,7 @@ def run_tracking(seed=None):
         t_seg_end = time.time()
         seg_time = t_seg_end - t_load_end
 
-        # ----------------- step simulation ---------------- #
+        # ------------------ step simulation ------------------- #
         # two steps
         robot_cfg_sampled = robot_cfg[[15, -1]]
         robot_cfg_qd_sampled = robot_cfg_qd[[15, -1]]
@@ -213,13 +201,7 @@ def run_tracking(seed=None):
             linear_vel = torch.from_numpy(linear_vel).to(device)
             angular_vel = torch.from_numpy(angular_vel).to(device)
             
-            # sim.step_new(positions, quats, linear_vel, angular_vel, gt_rgbs_list, gt_masks_list, clear_forces=False)
-            
-            # # two steps
-            # if j == 0:
-            #     sim.step(positions, quats, linear_vel, angular_vel, gt_rgbs_list, gt_masks_list, clear_forces=True)
-            # elif j == 1:
-            #     sim.step(positions, quats, linear_vel, angular_vel, clear_forces=False, vis_pts=obj_pcl, render=True)
+            # two steps
             if j == 0:
                 # set robot to the intermediate state and step simulation (prediction step)
                 sim.update_robot_state(positions, quats, linear_vel, angular_vel)
@@ -230,6 +212,7 @@ def run_tracking(seed=None):
                 sim.visual_correction(gt_rgbs_list, gt_masks_list)
                 sim.step_simulation(clear_forces=False, vis_pts=obj_pcl, render=True)
         
+        # --------------------------- alternative: single step --------------------------- #
         # # single step
         # robot_cfg_sampled = robot_cfg[[-1]]
         # robot_cfg_qd_sampled = robot_cfg_qd[[-1]]
@@ -263,22 +246,7 @@ def run_tracking(seed=None):
             'Avg': f'{avg_time:.3f}s'
         })
         
-        # save information for evaluation
-        if cfg.eval:
-            rod_pos_save.append(wp.to_torch(sim.state_0.particle_q).clone().cpu().numpy())
-            rod_quat_save.append(wp.to_torch(sim.state_0.rod_q).clone().cpu().numpy())
-            
-            render_obj_img, render_robot_img, render_all_img = sim.eval_render()
-            
-            # Convert to numpy and ensure correct shape (H, W, C)
-            render_obj_img_np = (render_obj_img.cpu().numpy() * 255).astype(np.uint8)[0]
-            render_robot_img_np = (render_robot_img.cpu().numpy() * 255).astype(np.uint8)[0]
-            render_all_img_np = (render_all_img.cpu().numpy() * 255).astype(np.uint8)[0]
-            
-            lycon.save(os.path.join(save_dir, f"obj_{idx}.png"), render_obj_img_np)  
-            lycon.save(os.path.join(save_dir, f"robot_{idx}.png"), render_robot_img_np)
-            lycon.save(os.path.join(save_dir, f"all_{idx}.png"), render_all_img_np)
-
+        # # ------------------- Rendering for visualization ------------------- #
         # # render
         # render_imgs = sim.vis_render()
         # for i in range(cfg.n_cams):
@@ -290,12 +258,6 @@ def run_tracking(seed=None):
     if cfg.render:
         sim.renderer.save()
     
-    # save rope states
-    if cfg.eval:
-        np.savez(os.path.join(save_dir, "tracking_result"), pos=rod_pos_save, quat=rod_quat_save)
-        logging.info("Saving optimized rod poses.")
-        logging.info(f"Average algorithm time per iteration: {np.mean(iter_times):.4f}s over {len(iter_times)} iterations")
-
 
 @click.command()
 @click.option('--seed', default=None, type=int, help='Random seed for reproducibility')

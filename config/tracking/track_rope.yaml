@@ -7,12 +7,15 @@ render: True
 stage_path: "result.usda"
 
 # ============================ Data Directory ======================================= #
-data_dir: "<absolute_path_to_save_data_dir>" # where you save the dataset
+# data_dir: "<absolute_path_to_save_data_dir>" # where you save the dataset
+data_dir: "/home/galois/git_downloads/6cyc6/gausstwin/dataset/demo" # where you save the dataset
 
 # =============================== EfficientTAM Config ===================================== #
-sam2_checkpoint: "<absoulte_path_to_sam2_checkpoint>/sam2.1_hiera_small.pt" # absolute path to the SAM2 checkpoint
+# sam2_checkpoint: "<absoulte_path_to_sam2_checkpoint>/sam2.1_hiera_small.pt" # absolute path to the SAM2 checkpoint
+sam2_checkpoint: "/home/galois/git_downloads/6cyc6/gausstwin/checkpoints/sam2.1_hiera_small.pt" 
 sam2_config: "configs/sam2.1/sam2.1_hiera_s.yaml" # do not need to change (relative path)
-tam_checkpoint: "<absoulte_path_to_efficienttam_checkpoint>/efficienttam_s_512x512.pt" # absolute path to the EfficientTAM checkpoint
+# tam_checkpoint: "<absoulte_path_to_efficienttam_checkpoint>/efficienttam_s_512x512.pt" # absolute path to the EfficientTAM checkpoint
+tam_checkpoint: "/home/galois/git_downloads/6cyc6/gausstwin/checkpoints/efficienttam_s_512x512.pt"
 tam_config: "configs/efficienttam/efficienttam_s_512x512.yaml" # do not need to change (relative path)
 
 n_cams: 3
@@ -20,18 +23,18 @@ num_views: 3
 
 # ======================================= Experiments ======================================= # 
 # ======================== Rope ============================ #
-exp_name: "rope_0004"
+exp_name: "rope_0000"
 obj_list: ["Rope"]
 
+# video crop
+disp: 180
+max_idx: 1080
+length: 900
+
 # solver
-substeps: 20
+substeps: 20 
 solver_iterations: 1
 fps: 60
-
-# video crop
-disp: 160
-max_idx: 1290
-length: 1130
 
 # optic track ground truth id
 gt_id: "rope"
@@ -44,24 +47,25 @@ fix_idx_4: 0
 
 # shape / ground friction
 ground_mu: 0.6
+ground_restitution: 0.0
 
 # object
 rope_m: 0.12
 rope_mass_q_factor: 0.5  # 0.5
 rope_stiffness_bend: [0.01, 0.01, 0.02]  
-# rope_stiffness_bend: [0.006, 0.006, 0.02]  
+# rope_stiffness_bend: [0.006, 0.006, 0.01]  
 rope_stiffness_stretch: [0.85, 0.85, 0.95]
 
 # gripper
 obj_radii: 0.006
 gripper_mu: 0.3
-gripper_density_factor: 0.2
+gripper_density_factor: 0.5
 
 # general settings
 torsional_friction: 0.025
 rolling_friction: 0.0
 
-kp_f: 180 
+kp_f: 180.0
 
 # ======================================= GS Optimization Config ======================================= #
 # 0: GS means + quats

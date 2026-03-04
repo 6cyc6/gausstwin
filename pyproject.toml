@@ -15,7 +15,7 @@ dependencies = [
     "pydantic",
     "scikit-learn",
     "pandas", 
-    "huggingface_hub"
+    "huggingface_hub",
     "gsplat>=1.5.3,<2", 
 ]
 

@@ -100,56 +100,6 @@ def save_cam_cfg(obj, vis):
         
         print(f"Camera {cam_id} configuration saved.")
 
-    # ----------------------------- for wrist cameras ----------------------------- #
-    for i in range(2):
-        cam_id = i + 1 + 4
-        if i == 0:
-            wrist_idx = cfg.wrist_idx_1
-        else:
-            wrist_idx = cfg.wrist_idx_2
-        # load path
-        cam_ext_path = f"{save_dir}/camera/wrist_{i + 1}/extrinsic/extrinsic_{wrist_idx}.npy"
-        cam_int_path = f"{save_dir}/camera/wrist_{i + 1}/intrinsic.npy"
-        img_path = f"{save_dir}/camera/wrist_{i + 1}/rgb/{wrist_idx}.png"
-        
-        # vis image
-        img = cv2.imread(img_path, cv2.IMREAD_UNCHANGED)
-        if vis:
-            cv2.imshow('Image', img)
-            cv2.waitKey(0)
-            cv2.destroyAllWindows()
-        h, w, _ = img.shape
-        print(f"Image shape: {img.shape}, Height: {h}, Width: {w}")
-        
-        # load parameters
-        # get extrinsics
-        cam_ext_mat = np.load(cam_ext_path)
-        cam_ext_mat = np.linalg.inv(cam_ext_mat)  # Invert the extrinsic matrix to get camera to world transformation
-        # Extract rotation and translation
-        rotation_matrix = cam_ext_mat[:3, :3]
-        translation = cam_ext_mat[:3, 3]
-        # Convert rotation matrix to quaternion
-        quat = R.from_matrix(rotation_matrix).as_quat()  # [x, y, z, w]
-        
-        # get intrinsics
-        cam_int_mat = np.load(cam_int_path)
-
-        camera_cfg = {
-            "pos": translation.tolist(),
-            "quat": np.roll(quat, 1).tolist(), # convert to [w, x, y, z]
-            "k": cam_int_mat.tolist(),
-            "h": h,
-            "w": w,
-        }
-        
-        print(cam_ext_mat)
-        
-        
-        with open(f"{save_dir}/camera_{cam_id}.json", "w") as f:
-            json.dump(camera_cfg, f, indent=4)
-        
-        print(f"Camera {cam_id} configuration saved.")
-
 
 if __name__ == "__main__":
     save_cam_cfg()

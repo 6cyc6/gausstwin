@@ -156,7 +156,7 @@ def main(obj):
                 pcl_list_all.append(np.zeros((n_points_per_frame, 3), dtype=np.float32))
 
             # Clean up
-            del gt_depth_list, gt_masks_pcl, gt_masks_list_pcl, gt_masks_eval, gt_mask_eval
+            del gt_depth_list, gt_masks_pcl, gt_masks_list_pcl
 
     # Stack all frames into single array: (T, N, 3)
     all_pcl = np.stack(pcl_list_all, axis=0)

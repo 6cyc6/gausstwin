@@ -28,7 +28,7 @@
 **/.neptune/*
 docker/artifacts/
 *.tmp
-**/save/*
+# **/save/*
 
 # weights
 **/checkpoints/*.pt
@@ -46,6 +46,10 @@ docker/artifacts/
 *.usd
 *.ini
 *.pth
+
+# dataset
+dataset/*
+!dataset/*.sh
 
 # Isaac-Sim packman
 _isaac_sim*

@@ -61,12 +61,20 @@ Download the pre-trained weights for segmentation model.
 ```
 pixi run download_ckpts
 ```
-Download the dataset.
+You can find the weights under folder `checkpoints`.
+
+Download the videos for the demo.
 ```
+pixi run download_demo
 ```
+You can find the videos under `dataset/demo`.
+
+### Edit the config file
 All the configurations are under the `config` folder. 
 Change the `tam_checkpoint`, `sam2_checkpoint`, and `data_dir` to where you download the weights and dataset.
 `tam_config` and `sam2_config` are relevant directory. You do not need to change them. 
+
+The config file for tracking is under `config/tracking`.
 
 ### Rope Tracking
 Process the data.
@@ -75,11 +83,13 @@ pixi run process_video_rope
 ```
 This script run segmentation for the rope to obtain its point cloud for visualization.
 It would take some time to compile the model when you run the segmentation model for the first time.
+A file with pointcloud of the object at each time stamp would be saved.
 
 Run tracking.
 ```
 pixi run track_rope
 ```
+A file `result.usda` would be saved in `scripts/tracking/rope`. Run `isaacsim` to open the simulation and drag this file into the window and click play, which is at the 
 
 ### Rigid Body Tracking
 Process the data
@@ -100,7 +110,7 @@ See [docs/build_object.md](docs/build_object.md) for more details.
 
 ## Acknowledgements
 
-Some code of this repo is adapted from [embodied_gaussians](https://github.com/bdaiinstitute/embodied_gaussians) and [isaaclab](https://github.com/isaac-sim/IsaacLab).
+Some code of this repo is adapted from [embodied_gaussians](https://github.com/bdaiinstitute/embodied_gaussians).
 Thanks for making the code public.
 
 ## Citation
