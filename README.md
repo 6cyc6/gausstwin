@@ -1,4 +1,7 @@
 # Gausstwin: Unified Simulation and Correction with Gaussian Splatting for Robotic Digital Twins
+This is an implementation of our paper accepted to ICRA 2026.
+
+[[Arxiv]()] [[Project page](https://6cyc6.github.io/gstwin/)]
 
 ## Setup
 We provide two options to setup the environment for running this repository.
@@ -112,6 +115,7 @@ See [docs/build_object.md](docs/build_object.md) for more details.
 
 Some code of this repo is adapted from [embodied_gaussians](https://github.com/bdaiinstitute/embodied_gaussians).
 Thanks for making the code public.
+Copilot and Claude code are used to generate some auxiliary functions in this repository.
 
 ## Citation
 @todo
