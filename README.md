@@ -1,7 +1,7 @@
 # Gausstwin: Unified Simulation and Correction with Gaussian Splatting for Robotic Digital Twins
 This is an implementation of our paper accepted to ICRA 2026.
 
-[[Arxiv]()] [[Project page](https://6cyc6.github.io/gstwin/)]
+[[Arxiv](https://arxiv.org/abs/2603.05108)] [[Project page](https://6cyc6.github.io/gstwin/)]
 
 ## Setup
 We provide two options to setup the environment for running this repository.
