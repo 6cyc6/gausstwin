@@ -117,5 +117,12 @@ Some code of this repo is adapted from [embodied_gaussians](https://github.com/b
 Thanks for making the code public.
 Copilot and Claude code are used to generate some auxiliary functions in this repository.
 
+We gratefully acknowledge the support of NVIDIA Corporation through the NVIDIA Academic Grant Program, including the provision of RTX 6000 Ada Generation GPUs used in this research.
+
 ## Citation
-@todo
+@article{cai2026gausstwin,
+  title={GaussTwin: Unified Simulation and Correction with Gaussian Splatting for Robotic Digital Twins},
+  author={Cai, Yichen and Jansonnie, Paul and de Farias, Cristiana and Arenz, Oleg and Peters, Jan},
+  journal={arXiv preprint arXiv:2603.05108},
+  year={2026}
+}
